@@ -1,49 +1,35 @@
 const express = require("express");
 const fs = require("fs");
-const path = require("path");
-
 const app = express();
+const PORT = 3000;
+
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("public"));
 
-const usersFile = path.join(__dirname, "server", "users.json");
-const boardsFile = path.join(__dirname, "server", "boards.json");
+let users = JSON.parse(fs.readFileSync("users.json", "utf-8"));
+let posts = JSON.parse(fs.readFileSync("posts.json", "utf-8"));
 
-// Ensure JSON files exist
-if (!fs.existsSync(usersFile)) fs.writeFileSync(usersFile, JSON.stringify([]));
-if (!fs.existsSync(boardsFile)) fs.writeFileSync(boardsFile, JSON.stringify({
-    videos: [], awareness: [], holiday: [], funny: [], crazy: [], memes: []
-}));
-
-app.get("/join", (req, res) => {
-    const username = req.query.username;
-    const users = JSON.parse(fs.readFileSync(usersFile));
-
-    if (users.includes(username)) {
-        res.json({ success: false });
-    } else {
-        users.push(username);
-        fs.writeFileSync(usersFile, JSON.stringify(users));
-        res.json({ success: true });
-    }
+app.get("/api/join", (req, res) => {
+  const { username } = req.query;
+  if (users.includes(username)) {
+    return res.json({ success: false, message: "Username is taken." });
+  }
+  users.push(username);
+  fs.writeFileSync("users.json", JSON.stringify(users, null, 2));
+  res.json({ success: true });
 });
 
-app.get("/posts", (req, res) => {
-    const board = req.query.board;
-    const boards = JSON.parse(fs.readFileSync(boardsFile));
-    res.json({ posts: boards[board] || [] });
+app.post("/api/post", (req, res) => {
+  const { username, board, content } = req.body;
+  posts.push({ username, board, content });
+  fs.writeFileSync("posts.json", JSON.stringify(posts, null, 2));
+  res.json({ success: true });
 });
 
-app.post("/post", (req, res) => {
-    const { content } = req.body;
-    const board = req.query.board || "videos"; // Default board
-    const boards = JSON.parse(fs.readFileSync(boardsFile));
-
-    if (boards[board]) {
-        boards[board].push(content);
-        fs.writeFileSync(boardsFile, JSON.stringify(boards));
-    }
-    res.status(200).end();
+app.get("/api/feed", (req, res) => {
+  const { board } = req.query;
+  const filteredPosts = posts.filter(post => post.board === board);
+  res.json({ posts: filteredPosts });
 });
 
-app.listen(3000, () => console.log("Feniang server running on http://localhost:3000"));
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
