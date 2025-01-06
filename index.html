@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feniang - Chat Boards</title>
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feniang</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Feniang</h1>
-        <p>Connect with others in your favorite boards</p>
-    </header>
-    <section id="login">
-        <input type="text" id="username" placeholder="Enter your username" />
-        <button id="join">Join</button>
-        <p id="login-message"></p>
-    </section>
-    <section id="boards" style="display: none;">
-        <h2>Boards</h2>
-        <ul>
-            <li data-board="videos">Videos</li>
-            <li data-board="awareness">Awareness</li>
-            <li data-board="holiday">Holiday</li>
-            <li data-board="funny">Funny</li>
-            <li data-board="crazy">Crazy</li>
-            <li data-board="memes">Memes</li>
-        </ul>
-        <div id="post-section">
-            <textarea id="post-content" placeholder="Write your post here..."></textarea>
-            <button id="post">Post</button>
-        </div>
-        <div id="posts"></div>
-    </section>
-    <script src="js/main.js"></script>
+  <div class="container">
+    <h1>Welcome to Feniang</h1>
+    <div id="username-section">
+      <label for="username">Enter your username:</label>
+      <input type="text" id="username" placeholder="Choose a username">
+      <button id="join-btn">Join</button>
+      <p id="username-error"></p>
+    </div>
+    <div id="boards-section" style="display: none;">
+      <h2>Select a Board:</h2>
+      <ul id="boards-list">
+        <li>Videos</li>
+        <li>Awareness</li>
+        <li>Holiday</li>
+        <li>Funny</li>
+        <li>Crazy</li>
+        <li>Memes</li>
+      </ul>
+    </div>
+    <div id="post-section" style="display: none;">
+      <h3>Post in <span id="current-board">[Board]</span></h3>
+      <textarea id="post-content" placeholder="What's on your mind?"></textarea>
+      <button id="post-btn">Post</button>
+    </div>
+    <div id="feed-section" style="display: none;">
+      <h3>Feed</h3>
+      <div id="feed"></div>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
